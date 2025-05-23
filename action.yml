@@ -38,6 +38,7 @@ runs:
 
   steps:
     - name: Set environment variables
+      shell: bash
       run: |
         echo "CURRENT_VERSION=${DISPATCH_CURRENT_VERSION}" >> $GITHUB_ENV
         echo "NEXT_VERSION=${DISPATCH_NEXT_VERSION}" >> $GITHUB_ENV
@@ -47,6 +48,7 @@ runs:
 
     - name: Validate version
       if: contains(env.CURRENT_VERSION, 'SNAPSHOT')
+      shell: bash
       run: |
         echo '::error::Cannot release a SNAPSHOT version.'
         exit 1
@@ -69,11 +71,13 @@ runs:
         gpg-private-key: ${{ inputs.gpg-secret-key }} # macOS: gpg --armor --export-secret-key
 
     - name: Configure Git User
+      shell: bash
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@users.noreply.github.com"
 
     - name: Set Release version
+      shell: bash
       run: |
         mvn -B versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${CURRENT_VERSION}
         sed -i "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${CURRENT_VERSION}</version>|g" README.md
@@ -87,20 +91,24 @@ runs:
         MAVEN_GPG_PASSPHRASE: ${{ inputs.signing-passphrase }}
 
     - name: Create Tag
+      shell: bash
       run: |
         git tag -a "v${CURRENT_VERSION}" -m "Release v${CURRENT_VERSION}"
 
     - name: Set Next Version
+      shell: bash
       run: |
         mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
         git commit --no-verify -a -m "[CI Skip] Next version v${NEXT_VERSION}"
 
     - name: Push changes
+      shell: bash
       run: |
         git push origin $(git rev-parse --abbrev-ref HEAD)
         git push --tags
 
     - name: Create Release
+      shell: bash
       run: |
         gh release create v${CURRENT_VERSION} --generate-notes
       env:
