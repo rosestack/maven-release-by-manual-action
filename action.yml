@@ -16,6 +16,21 @@ inputs:
     required: true
     type: string
     default: "0.0.2-SNAPSHOT"
+  gpg-secret-key:
+    description: "gpg-secret-key"
+    required: true
+  signing-passphrase:
+    description: "signing-passphrase"
+    required: true
+  ossrh-username:  
+    description: "ossrh-username"
+    required: true
+  ossrh-password:  
+    description: "ossrh-password"
+    required: true
+  github-token:  
+    description: "github-token"
+    required: true
 
 
 runs:
@@ -39,7 +54,7 @@ runs:
     - name: Checkout Source
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.github-token }}
 
     - name: Set up Java 8
       uses: actions/setup-java@v4
@@ -51,7 +66,7 @@ runs:
         server-username: MAVEN_USERNAME
         server-password: MAVEN_PASSWORD
         gpg-passphrase: MAVEN_GPG_PASSPHRASE
-        gpg-private-key: ${{ secrets.GPG_SECRET_KEY }} # macOS: gpg --armor --export-secret-key
+        gpg-private-key: ${{ inputs.gpg-secret-key }} # macOS: gpg --armor --export-secret-key
 
     - name: Configure Git User
       run: |
@@ -67,9 +82,9 @@ runs:
     - name: Publish to Central
       run: mvn -DskipTests -Prelease deploy
       env:
-        MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-        MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-        MAVEN_GPG_PASSPHRASE: ${{ secrets.SIGNING_PASSPHRASE }}
+        MAVEN_USERNAME: ${{ inputs.ossrh-username }}
+        MAVEN_PASSWORD: ${{ inputs.ossrh-password }}
+        MAVEN_GPG_PASSPHRASE: ${{ inputs.signing-passphrase }}
 
     - name: Create Tag
       run: |
@@ -89,11 +104,11 @@ runs:
       run: |
         gh release create v${CURRENT_VERSION} --generate-notes
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
 
     - name: Release Milestone
       uses: rosestack/milestone-release-action@main
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ inputs.github-token }}
         milestone-title: ${{ env.CURRENT_VERSION }}
         milestone-next: ${{ env.NEXT_VERSION }}
