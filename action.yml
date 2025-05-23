@@ -84,6 +84,7 @@ runs:
         git commit --no-verify -a -m "[CI Skip] Releasing ${CURRENT_VERSION}"
 
     - name: Publish to Central
+      shell: bash
       run: mvn -DskipTests -Prelease deploy
       env:
         MAVEN_USERNAME: ${{ inputs.ossrh-username }}
