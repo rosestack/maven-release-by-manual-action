@@ -10,26 +10,24 @@ inputs:
     description: "Release version"
     required: true
     type: string
-    default: "0.0.1"
   next-version:
     description: "Next version"
     required: true
     type: string
-    default: "0.0.2-SNAPSHOT"
   gpg-secret-key:
-    description: "gpg-secret-key"
+    description: "GPG secret key"
     required: true
   signing-passphrase:
-    description: "signing-passphrase"
+    description: "Signing passphrase"
     required: true
-  ossrh-username:  
-    description: "ossrh-username"
+  ossrh-username:
+    description: "OSSRH username"
     required: true
-  ossrh-password:  
-    description: "ossrh-password"
+  ossrh-password:
+    description: "OSSRH password"
     required: true
-  github-token:  
-    description: "github-token"
+  github-token:
+    description: "GitHub token"
     required: true
 
 
