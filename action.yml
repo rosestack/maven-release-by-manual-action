@@ -30,7 +30,9 @@ inputs:
     description: "GitHub token"
     required: true
 
-
+env:
+  MAVEN_ARGS: -B -U -ntp
+  
 runs:
   using: 'composite'
 
