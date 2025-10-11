@@ -73,7 +73,7 @@ runs:
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@users.noreply.github.com"
 
-    - name: Set Release version
+    - name: Create Release branch
       shell: bash
       run: |
         git checkout -b "$RELEASE_VERSION"
@@ -93,7 +93,7 @@ runs:
         MAVEN_PASSWORD: ${{ inputs.ossrh-password }}
         MAVEN_GPG_PASSPHRASE: ${{ inputs.gpg-passphrase }}
 
-    - name: Create Tag
+    - name: Create Release Tag
       shell: bash
       run: |
         git tag -a "v${RELEASE_VERSION}" -m "Release v${RELEASE_VERSION}"
@@ -112,7 +112,7 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
 
-    - name: Set Next Version and Merge to main
+    - name: Set Next Version for main branch
       shell: bash
       run: |
         mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
