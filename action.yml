@@ -88,7 +88,6 @@ runs:
         git push origin "release-$RELEASE_VERSION"
 
     - name: Deploy to Maven Central
-      timeout-minutes: 120
       shell: bash
       run: |
         mvn deploy site site:stage -DskipTests -Pcentral
