@@ -117,6 +117,10 @@ runs:
       run: |
         mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
         git commit --no-verify -a -m "[CI Skip] Next version v${NEXT_VERSION}"
+        git checkout main
+        git pull origin main
+        git merge "$RELEASE_VERSION"
+        git commit --no-verify -a -m "[CI Skip] Merge ${RELEASE_VERSION} to main"
           
     - name: Release Milestone
       uses: rosestack/milestone-release-action@main
