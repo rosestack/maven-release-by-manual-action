@@ -76,13 +76,13 @@ runs:
     - name: Set Release version
       shell: bash
       run: |
-        git checkout -b "release-$RELEASE_VERSION"
+        git checkout -b "$RELEASE_VERSION"
 
         mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
         sed -i "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${RELEASE_VERSION}</version>|g" README.md
         git commit --no-verify -a -m "[CI Skip] Releasing branch ${RELEASE_VERSION}"
 
-        git push origin "RELEASE_VERSION"
+        git push origin "$RELEASE_VERSION"
 
     - name: Deploy to Maven Central
       shell: bash
