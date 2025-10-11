@@ -1,6 +1,12 @@
 name: 'Maven Release by Manual Action'
 description: 'Complete environment configuration for Maven Release by Manual Action'
 
+##
+## Automates the release process
+## 1. Run workflow
+## 2. trigger this action: create release branch, create tag and release, set next version and merge to main, Release Milestone
+
+
 branding:
   icon: 'settings'
   color: 'green'
