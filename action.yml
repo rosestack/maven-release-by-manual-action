@@ -112,7 +112,7 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
 
-    - name: Set Next Version
+    - name: Set Next Version and Merge to main
       shell: bash
       run: |
         mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
