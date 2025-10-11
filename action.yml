@@ -89,6 +89,7 @@ runs:
 
     - name: Deploy to Maven Central
       timeout-minutes: 120
+      shell: bash
       run: |
         mvn deploy site site:stage -DskipTests -Pcentral
       env:
@@ -109,6 +110,7 @@ runs:
         publish_dir: ./target/staging
 
     - name: Create GitHub Release
+      shell: bash
       run: |
         gh release create v${RELEASE_VERSION} --generate-notes target/*.asc target/*.jar target/*.pom
       env:
