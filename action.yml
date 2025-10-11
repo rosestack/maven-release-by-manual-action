@@ -30,9 +30,6 @@ inputs:
     description: "GitHub token"
     required: true
 
-env:
-  MAVEN_ARGS: -B -U -ntp
-
 runs:
   using: 'composite'
 
@@ -90,7 +87,7 @@ runs:
     - name: Deploy to Maven Central
       shell: bash
       run: |
-        mvn deploy site site:stage -DskipTests -Pcentral
+        mvn -B -U -ntp deploy site site:stage -DskipTests -Pcentral
       env:
         MAVEN_USERNAME: ${{ inputs.ossrh-username }}
         MAVEN_PASSWORD: ${{ inputs.ossrh-password }}
