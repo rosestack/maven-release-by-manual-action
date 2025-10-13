@@ -37,9 +37,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/chensoul/maven-release-by-manual-action.git</connection>
-        <developerConnection>scm:git:ssh://github.com:chensoul/maven-release-by-manual-action.git</developerConnection>
-        <url>https://github.com/chensoul/maven-release-by-manual-action/tree/main/test-project</url>
+        <connection>scm:git:git://github.com/rosestack/maven-release-by-manual-action.git</connection>
+        <developerConnection>scm:git:ssh://github.com:rosestack/maven-release-by-manual-action.git</developerConnection>
+        <url>https://github.com/rosestack/maven-release-by-manual-action/tree/main/test-project</url>
         <tag>HEAD</tag>
     </scm>
 

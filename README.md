@@ -37,7 +37,7 @@ steps:
       token: ${{ secrets.GITHUB_TOKEN }}
   
   - name: Release Maven Project
-    uses: chensoul/maven-release-by-manual-action@main
+    uses: rosestack/maven-release-by-manual-action@main
     # ... your configuration
 ```
 
@@ -82,7 +82,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Release Maven Project
-        uses: chensoul/maven-release-by-manual-action@main
+        uses: rosestack/maven-release-by-manual-action@main
         with:
           release-version: ${{ github.event.inputs.release-version }}
           next-version: ${{ github.event.inputs.next-version }}
@@ -103,7 +103,7 @@ jobs:
     token: ${{ secrets.GITHUB_TOKEN }}
 
 - name: Release Maven Project
-  uses: chensoul/maven-release-by-manual-action@main
+  uses: rosestack/maven-release-by-manual-action@main
   with:
     # Version Configuration
     release-version: '1.0.0'
@@ -376,5 +376,5 @@ Contributions are welcome! Please feel free to submit issues and pull requests.
 ## 📧 Support
 
 For issues and questions:
-- GitHub Issues: https://github.com/chensoul/maven-release-by-manual-action/issues
+- GitHub Issues: https://github.com/rosestack/maven-release-by-manual-action/issues
 - Email: ichensoul@gmail.com

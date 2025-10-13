@@ -28,7 +28,7 @@ jobs:
           fetch-depth: 0  # Required for generating release notes
         
       - name: Release Maven Project
-        uses: chensoul/maven-release-by-manual-action@main
+        uses: rosestack/maven-release-by-manual-action@main
         with:
           # Version Configuration
           release-version: ${{ github.event.inputs.release-version }}

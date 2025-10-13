@@ -39,7 +39,7 @@ steps:
       token: ${{ secrets.GITHUB_TOKEN }}
   
   - name: 发布 Maven 项目
-    uses: chensoul/maven-release-by-manual-action@main
+    uses: rosestack/maven-release-by-manual-action@main
     # ... 您的配置
 ```
 
@@ -84,7 +84,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: 发布 Maven 项目
-        uses: chensoul/maven-release-by-manual-action@main
+        uses: rosestack/maven-release-by-manual-action@main
         with:
           release-version: ${{ github.event.inputs.release-version }}
           next-version: ${{ github.event.inputs.next-version }}
@@ -99,7 +99,7 @@ jobs:
 
 ```yaml
 - name: 发布 Maven 项目
-  uses: chensoul/maven-release-by-manual-action@main
+  uses: rosestack/maven-release-by-manual-action@main
   with:
     # 版本配置
     release-version: '1.0.0'
@@ -372,6 +372,6 @@ Apache License 2.0 - 详见 [LICENSE](LICENSE) 文件。
 ## 📧 支持
 
 问题和咨询：
-- GitHub Issues: https://github.com/chensoul/maven-release-by-manual-action/issues
+- GitHub Issues: https://github.com/rosestack/maven-release-by-manual-action/issues
 - 电子邮件: ichensoul@gmail.com
 
