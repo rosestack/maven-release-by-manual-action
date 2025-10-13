@@ -1,6 +1,6 @@
 # Test Release Project
 
-This is a sample Maven project used for testing the maven-deploy-action.
+This is a sample Maven project used for testing the maven-release-by-manual-action.
 
 ## Features
 
@@ -58,5 +58,5 @@ test-project/
 
 ## Usage
 
-This project is meant to be used with the maven-deploy-action. See the main README for more information.
+This project is meant to be used with the maven-release-by-manual-action. See the main README for more information.
 

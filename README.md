@@ -1,6 +1,9 @@
 # Maven Release by Manual Action
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![GitHub release](https://img.shields.io/github/v/release/chensoul/maven-release-by-manual-action)](https://github.com/chensoul/maven-release-by-manual-action/releases)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/chensoul/maven-release-by-manual-action/ci.yml?branch=main)](https://github.com/chensoul/maven-release-by-manual-action/actions/workflows/test.yml)
+[![License](https://img.shields.io/github/license/chensoul/maven-release-by-manual-action)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/chensoul/maven-release-by-manual-action)](https://github.com/chensoul/maven-release-by-manual-action/stargazers)
 
 A comprehensive GitHub Actions workflow for automating Maven project releases with complete version management, Maven Central deployment, and documentation publishing.
 
@@ -347,9 +350,9 @@ with:
 - Ensure main branch is up to date before release
 - Resolve any pending PRs that might conflict
 
-## 📊 Comparison with maven-deploy-action
+## 📊 Comparison with maven-release-by-manual-action
 
-This action builds upon the concepts from [maven-deploy-action](https://github.com/rosestack/maven-deploy-action) but adds:
+This action builds upon the concepts from [maven-release-by-manual-action](https://github.com/rosestack/maven-release-by-manual-action) but adds:
 
 - ✅ Release branch management
 - ✅ Automatic version bumping
@@ -367,7 +370,7 @@ Contributions are welcome! Please feel free to submit issues and pull requests.
 
 ## 🙏 Acknowledgments
 
-- Inspired by [maven-deploy-action](https://github.com/rosestack/maven-deploy-action)
+- Inspired by [maven-release-by-manual-action](https://github.com/rosestack/maven-release-by-manual-action)
 - Uses [actions/checkout](https://github.com/actions/checkout)
 - Uses [actions/setup-java](https://github.com/actions/setup-java)
 - Uses [peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages)

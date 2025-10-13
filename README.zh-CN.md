@@ -1,6 +1,9 @@
 # Maven 手动发布 Action
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![GitHub release](https://img.shields.io/github/v/release/chensoul/maven-release-by-manual-action)](https://github.com/chensoul/maven-release-by-manual-action/releases)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/chensoul/maven-release-by-manual-action/ci.yml?branch=main)](https://github.com/chensoul/maven-release-by-manual-action/actions/workflows/test.yml)
+[![License](https://img.shields.io/github/license/chensoul/maven-release-by-manual-action)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/chensoul/maven-release-by-manual-action)](https://github.com/chensoul/maven-release-by-manual-action/stargazers)
 
 [English](README.md) | 简体中文
 
@@ -343,9 +346,9 @@ with:
 - 确保发布前主分支是最新的
 - 解决任何可能冲突的待处理 PR
 
-## 📊 与 maven-deploy-action 的比较
+## 📊 与 maven-release-by-manual-action 的比较
 
-该 Action 基于 [maven-deploy-action](https://github.com/rosestack/maven-deploy-action) 的概念，但增加了：
+该 Action 基于 [maven-release-by-manual-action](https://github.com/rosestack/maven-release-by-manual-action) 的概念，但增加了：
 
 - ✅ 发布分支管理
 - ✅ 自动版本更新
@@ -363,7 +366,7 @@ Apache License 2.0 - 详见 [LICENSE](LICENSE) 文件。
 
 ## 🙏 致谢
 
-- 灵感来自 [maven-deploy-action](https://github.com/rosestack/maven-deploy-action)
+- 灵感来自 [maven-release-by-manual-action](https://github.com/rosestack/maven-release-by-manual-action)
 - 使用 [actions/checkout](https://github.com/actions/checkout)
 - 使用 [actions/setup-java](https://github.com/actions/setup-java)
 - 使用 [peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages)
