@@ -102,24 +102,6 @@ runs:
           fi
           echo "📁 Working directory: ${{ inputs.working-directory }}"
         fi
-        
-        # Check Git status
-        if [[ -n $(git status --porcelain) ]]; then
-          echo "::warning::Working directory is not clean. Uncommitted changes detected."
-          git status --short
-        fi
-        
-        echo "✅ Release version validated: ${{ inputs.release-version }}"
-        echo "✅ Next version: ${{ inputs.next-version }}"
-        echo "✅ Java: ${{ inputs.java-version }} (${{ inputs.java-distribution }})"
-        echo "✅ Maven server ID: ${{ inputs.maven-server-id }}"
-        
-        # Verify repository is checked out
-        if [[ ! -d ".git" ]]; then
-          echo "::error::Repository not checked out. Please run actions/checkout before this action."
-          exit 1
-        fi
-        echo "✅ Repository checked out"
 
     - name: Set up Java
       uses: actions/setup-java@v4
