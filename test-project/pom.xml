@@ -69,7 +69,7 @@
     <distributionManagement>
         <site>
             <id>github</id>
-            <url>https://chensoul.github.io/maven-release-by-manual-action/test-project</url>
+            <url>https://rosestack.github.io/maven-release-by-manual-action/test-project</url>
         </site>
         <repository>
             <id>central</id>
