@@ -176,9 +176,19 @@ runs:
         
         # Commit and push release branch
         git add .
-        git commit --no-verify -m "chore: prepare release ${{ inputs.release-version }}"
-        git push origin "${RELEASE_BRANCH}"
-        echo "✅ Release branch created and pushed successfully"
+        
+        # Check if there are changes to commit
+        if git diff --cached --quiet; then
+          echo "⚠️  No changes detected after version update"
+          echo "This might mean the version was already set to ${{ inputs.release-version }}"
+          # Push branch anyway (empty branch for tracking)
+          git push origin "${RELEASE_BRANCH}"
+          echo "✅ Release branch created (no changes needed)"
+        else
+          git commit --no-verify -m "chore: prepare release ${{ inputs.release-version }}"
+          git push origin "${RELEASE_BRANCH}"
+          echo "✅ Release branch created and pushed successfully"
+        fi
 
     - name: Build and Deploy to Maven Central
       shell: bash
@@ -313,9 +323,17 @@ runs:
         
         # Commit and push next version
         git add .
-        git commit --no-verify -m "chore: prepare for next development iteration ${{ inputs.next-version }}"
-        git push origin "${RELEASE_BRANCH}"
-        echo "✅ Next version committed to release branch"
+        
+        # Check if there are changes to commit
+        if git diff --cached --quiet; then
+          echo "⚠️  No changes detected for next version update"
+          echo "Version might already be set to ${{ inputs.next-version }}"
+          echo "✅ Skipping commit (no changes needed)"
+        else
+          git commit --no-verify -m "chore: prepare for next development iteration ${{ inputs.next-version }}"
+          git push origin "${RELEASE_BRANCH}"
+          echo "✅ Next version committed to release branch"
+        fi
         
         # Merge to main branch
         echo "🔀 Merging to ${MAIN_BRANCH}..."
