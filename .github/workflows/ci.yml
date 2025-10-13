@@ -4,11 +4,7 @@ on:
   push:
     branches:
       - main
-
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+  workflow_dispatch:
 
 jobs:
   build:
@@ -19,7 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to Maven Central
+      - name: Build with Maven
         uses: rosestack/maven-build-action@main
         with:
           working-directory: 'test-project'
