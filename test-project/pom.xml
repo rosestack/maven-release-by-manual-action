@@ -4,10 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cc.chensoul</groupId>
+    <groupId>io.github.rosestack</groupId>
     <artifactId>test-project</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <url>https://github.com/rosestack/maven-release-by-manual-action/test-project</url>
 
     <name>Test Project</name>
     <description>A sample project for testing</description>
@@ -39,7 +40,7 @@
     <scm>
         <connection>scm:git:git://github.com/rosestack/maven-release-by-manual-action.git</connection>
         <developerConnection>scm:git:ssh://github.com:rosestack/maven-release-by-manual-action.git</developerConnection>
-        <url>https://github.com/rosestack/maven-release-by-manual-action/tree/main/test-project</url>
+        <url>https://github.com/rosestack/maven-release-by-manual-action/test-project</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -71,14 +72,6 @@
             <id>github</id>
             <url>https://rosestack.github.io/maven-release-by-manual-action/test-project</url>
         </site>
-        <repository>
-            <id>central</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>central</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <build>
@@ -178,6 +171,7 @@
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
                         <version>0.9.0</version>
+                        <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
