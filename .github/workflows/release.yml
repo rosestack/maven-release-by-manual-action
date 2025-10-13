@@ -4,13 +4,15 @@ on:
   workflow_dispatch:
     inputs:
       release-version:
-        description: 'Release version (e.g., 1.0.0)'
+        description: 'Release version (e.g. 0.0.1)'
         required: true
         type: string
+        default: '0.0.1'
       next-version:
-        description: 'Next development version (e.g., 1.0.1-SNAPSHOT)'
+        description: 'Next development version (e.g. 0.0.2-SNAPSHOT)'
         required: true
         type: string
+        default: '0.0.2-SNAPSHOT'
 
 jobs:
   release:
