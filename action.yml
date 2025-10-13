@@ -197,6 +197,22 @@ runs:
         set -e
         echo "🚀 Building and deploying to Maven Central..."
         
+        # Verify authentication is configured
+        echo "🔐 Verifying Maven settings..."
+        if [[ -f ~/.m2/settings.xml ]]; then
+          echo "✅ Maven settings.xml exists"
+        else
+          echo "⚠️  Warning: settings.xml not found"
+        fi
+        
+        # Verify environment variables are set
+        if [[ -n "$MAVEN_USERNAME" ]] && [[ -n "$MAVEN_PASSWORD" ]]; then
+          echo "✅ Maven credentials are configured"
+        else
+          echo "::error::Maven credentials not found in environment"
+          exit 1
+        fi
+        
         # Build Maven command with dynamic options
         MAVEN_CMD="mvn ${{ inputs.maven-args }} deploy site site:stage"
         
