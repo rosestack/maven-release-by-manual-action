@@ -1,0 +1,69 @@
+name: Release to Maven Central
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: 'Release version (e.g., 1.0.0)'
+        required: true
+        type: string
+      next-version:
+        description: 'Next development version (e.g., 1.0.1-SNAPSHOT)'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write    # For creating releases and pushing commits
+      pages: write       # For GitHub Pages deployment
+      id-token: write    # For GitHub Pages deployment
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for generating release notes
+        
+      - name: Release Maven Project
+        uses: chensoul/maven-release-by-manual-action@main
+        with:
+          # Version Configuration
+          release-version: ${{ github.event.inputs.release-version }}
+          next-version: ${{ github.event.inputs.next-version }}
+          
+          # Maven Central Authentication
+          maven-username: ${{ secrets.MAVEN_USERNAME }}
+          maven-password: ${{ secrets.MAVEN_PASSWORD }}
+          
+          # GPG Signing
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          
+          # GitHub Configuration
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Optional: Customize Java version
+          # java-version: '17'
+          # java-distribution: 'temurin'
+          
+          # Optional: Skip tests for emergency releases
+          # skip-tests: 'true'
+          
+          # Optional: Disable GitHub Pages deployment
+          # deploy-pages: 'false'
+          
+          # Optional: Customize Maven arguments
+          # maven-args: '-B -U -ntp -T 1C'
+          
+          # Optional: Customize Maven server ID
+          # maven-server-id: 'central'
+          
+          # Optional: Activate additional Maven profiles
+          # maven-profiles: 'central,release'
+          
+          # Optional: Specify working directory for submodules
+          # working-directory: 'my-module'
+

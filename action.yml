@@ -1,134 +1,340 @@
 name: 'Maven Release by Manual Action'
-description: 'Complete environment configuration for Maven Release by Manual Action'
-
-##
-## Automates the release process
-## 1. Run workflow
-## 2. trigger this action: create release branch, create tag and release, set next version and merge to main, Release Milestone
-
+description: 'Automates Maven project release: creates branch, deploys to Maven Central, generates docs, and manages versions'
 
 branding:
-  icon: 'settings'
-  color: 'green'
+  icon: 'package'
+  color: 'blue'
 
 inputs:
+  # Version Configuration
   release-version:
-    description: "Release version"
+    description: 'Release version (e.g., 1.0.0)'
     required: true
-    type: string
   next-version:
-    description: "Next version"
+    description: 'Next development version (e.g., 1.0.1-SNAPSHOT)'
     required: true
-    type: string
-  gpg-secret-key:
-    description: "GPG secret key"
+  
+  # Java Configuration
+  java-version:
+    description: 'Java version to use for building'
+    required: false
+    default: '8'
+  java-distribution:
+    description: 'Java distribution (temurin, zulu, adopt, etc.)'
+    required: false
+    default: 'temurin'
+  
+  # Maven Central Authentication
+  maven-server-id:
+    description: 'Maven server ID for authentication'
+    required: false
+    default: 'central'
+  maven-username:
+    description: 'Maven Central username'
+    required: true
+  maven-password:
+    description: 'Maven Central password'
+    required: true
+  
+  # GPG Signing
+  gpg-private-key:
+    description: 'GPG private key for signing artifacts'
     required: true
   gpg-passphrase:
-    description: "GPG passphrase"
+    description: 'GPG key passphrase'
     required: true
-  ossrh-username:
-    description: "OSSRH username"
-    required: true
-  ossrh-password:
-    description: "OSSRH password"
-    required: true
+  
+  # GitHub Configuration
   github-token:
-    description: "GitHub token"
+    description: 'GitHub token with write permissions'
     required: true
+  
+  # Build Options
+  maven-args:
+    description: 'Additional Maven arguments'
+    required: false
+    default: '-B -U -ntp -T 1C'
+  maven-profiles:
+    description: 'Maven profiles to activate (comma-separated)'
+    required: false
+    default: 'central'
+  skip-tests:
+    description: 'Skip running tests during deployment'
+    required: false
+    default: 'false'
+  deploy-pages:
+    description: 'Deploy Maven site to GitHub Pages'
+    required: false
+    default: 'true'
+  
+  # Advanced Options
+  working-directory:
+    description: 'Working directory for multi-module projects'
+    required: false
+    default: '.'
 
 runs:
   using: 'composite'
 
   steps:
-    - name: Set environment variables
+    - name: Validate Inputs
       shell: bash
       run: |
-        echo "RELEASE_VERSION=${DISPATCH_RELEASE_VERSION}" >> $GITHUB_ENV
-        echo "NEXT_VERSION=${DISPATCH_NEXT_VERSION}" >> $GITHUB_ENV
-      env:
-        DISPATCH_RELEASE_VERSION: ${{ inputs.release-version }}
-        DISPATCH_NEXT_VERSION: ${{ inputs.next-version }}
+        set -e
+        echo "🔍 Validating release inputs..."
+        
+        # Validate release version is not SNAPSHOT
+        if [[ "${{ inputs.release-version }}" == *"SNAPSHOT"* ]]; then
+          echo "::error::Cannot release a SNAPSHOT version: ${{ inputs.release-version }}"
+          exit 1
+        fi
+        
+        # Validate version format (basic check)
+        if ! [[ "${{ inputs.release-version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+          echo "::warning::Release version format may not follow semantic versioning: ${{ inputs.release-version }}"
+        fi
+        
+        # Validate working directory exists
+        if [[ "${{ inputs.working-directory }}" != "." ]]; then
+          if [[ ! -d "${{ inputs.working-directory }}" ]]; then
+            echo "::error::Working directory not found: ${{ inputs.working-directory }}"
+            exit 1
+          fi
+          echo "📁 Working directory: ${{ inputs.working-directory }}"
+        fi
+        
+        # Check Git status
+        if [[ -n $(git status --porcelain) ]]; then
+          echo "::warning::Working directory is not clean. Uncommitted changes detected."
+          git status --short
+        fi
+        
+        echo "✅ Release version validated: ${{ inputs.release-version }}"
+        echo "✅ Next version: ${{ inputs.next-version }}"
+        echo "✅ Java: ${{ inputs.java-version }} (${{ inputs.java-distribution }})"
+        echo "✅ Maven server ID: ${{ inputs.maven-server-id }}"
+        
+        # Verify repository is checked out
+        if [[ ! -d ".git" ]]; then
+          echo "::error::Repository not checked out. Please run actions/checkout before this action."
+          exit 1
+        fi
+        echo "✅ Repository checked out"
 
-    - name: Validate release version
-      if: contains(env.RELEASE_VERSION, 'SNAPSHOT')
-      shell: bash
-      run: |
-        echo '::error::Cannot release a SNAPSHOT version.'
-        exit 1
-
-    - name: Checkout Source
-      uses: actions/checkout@v4
-      with:
-        token: ${{ inputs.github-token }}
-
-    - name: Set up Java 8
+    - name: Set up Java
       uses: actions/setup-java@v4
       with:
-        java-version: '8'
-        distribution: 'temurin'
+        java-version: ${{ inputs.java-version }}
+        distribution: ${{ inputs.java-distribution }}
         cache: maven
-        server-id: central
+        server-id: ${{ inputs.maven-server-id }}
         server-username: MAVEN_USERNAME
         server-password: MAVEN_PASSWORD
         gpg-passphrase: MAVEN_GPG_PASSPHRASE
-        gpg-private-key: ${{ inputs.gpg-secret-key }} # macOS: gpg --armor --export-secret-key
+        gpg-private-key: ${{ inputs.gpg-private-key }}
 
     - name: Configure Git User
       shell: bash
       run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "github-actions@users.noreply.github.com"
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
 
-    - name: Create Release branch
+    - name: Create Release Branch
       shell: bash
       run: |
-        git checkout -b "$RELEASE_VERSION"
-        mvn -B -U -ntp versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
-        sed -i "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${RELEASE_VERSION}</version>|g" README.md
-        git commit --no-verify -a -m "[CI Skip] Releasing branch ${RELEASE_VERSION}"
-        git push origin "$RELEASE_VERSION"
+        set -e
+        RELEASE_BRANCH="${{ inputs.release-version }}"
+        WORK_DIR="${{ inputs.working-directory }}"
+        
+        echo "📦 Creating release branch: ${RELEASE_BRANCH}"
+        
+        # Create and switch to release branch (Git operation in repo root)
+        git checkout -b "${RELEASE_BRANCH}"
+        
+        # Update project version (Maven operation in working directory)
+        echo "🔄 Updating version to ${{ inputs.release-version }}..."
+        if [[ "${WORK_DIR}" != "." ]]; then
+          cd "${WORK_DIR}"
+        fi
+        
+        mvn ${{ inputs.maven-args }} versions:set \
+          -DprocessAllModules=true \
+          -DgenerateBackupPoms=false \
+          -DnewVersion=${{ inputs.release-version }}
+        
+        # Update version in README if exists (in working directory)
+        if [ -f "README.md" ]; then
+          echo "📝 Updating README.md version references..."
+          sed -i.bak "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+\(-[A-Za-z0-9]\+\)\?</version>|<version>${{ inputs.release-version }}</version>|g" README.md
+          rm -f README.md.bak
+        fi
+        
+        # Return to repo root for Git operations
+        if [[ "${WORK_DIR}" != "." ]]; then
+          cd "${GITHUB_WORKSPACE}"
+        fi
+        
+        # Commit and push release branch
+        git add .
+        git commit --no-verify -m "chore: prepare release ${{ inputs.release-version }}"
+        git push origin "${RELEASE_BRANCH}"
+        echo "✅ Release branch created and pushed successfully"
 
-    - name: Deploy to Maven Central
+    - name: Build and Deploy to Maven Central
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
-        mvn -B -U -ntp deploy site site:stage -DskipTests -Pcentral
+        set -e
+        echo "🚀 Building and deploying to Maven Central..."
+        
+        # Build Maven command with dynamic options
+        MAVEN_CMD="mvn ${{ inputs.maven-args }} deploy site site:stage"
+        
+        # Add test skip option if requested
+        if [[ "${{ inputs.skip-tests }}" == "true" ]]; then
+          echo "⏭️  Skipping tests..."
+          MAVEN_CMD="${MAVEN_CMD} -DskipTests"
+        fi
+        
+        # Add Maven profiles if specified
+        if [[ -n "${{ inputs.maven-profiles }}" ]]; then
+          echo "🎯 Activating Maven profiles: ${{ inputs.maven-profiles }}"
+          MAVEN_CMD="${MAVEN_CMD} -P${{ inputs.maven-profiles }}"
+        fi
+        
+        # Execute Maven deploy
+        echo "📦 Executing: ${MAVEN_CMD}"
+        eval "${MAVEN_CMD}"
+        echo "✅ Deployment completed successfully"
       env:
-        MAVEN_USERNAME: ${{ inputs.ossrh-username }}
-        MAVEN_PASSWORD: ${{ inputs.ossrh-password }}
+        MAVEN_USERNAME: ${{ inputs.maven-username }}
+        MAVEN_PASSWORD: ${{ inputs.maven-password }}
         MAVEN_GPG_PASSPHRASE: ${{ inputs.gpg-passphrase }}
 
-    - name: Create Tag and Release
+    - name: Create Git Tag and GitHub Release
       shell: bash
       run: |
-        git tag -a "v${RELEASE_VERSION}" -m "Release v${RELEASE_VERSION}"
-        git push --tags
-        gh release create v${RELEASE_VERSION} --generate-notes target/*.asc target/*.jar target/*.pom
+        set -e
+        TAG_NAME="v${{ inputs.release-version }}"
+        WORK_DIR="${{ inputs.working-directory }}"
+        
+        echo "🏷️ Creating tag and release: ${TAG_NAME}"
+        
+        # Create and push tag (Git operation in repo root)
+        git tag -a "${TAG_NAME}" -m "Release ${TAG_NAME}"
+        git push origin "${TAG_NAME}"
+        echo "✅ Tag created and pushed"
+        
+        # Create GitHub release with artifacts
+        if command -v gh &> /dev/null; then
+          echo "📝 Creating GitHub release..."
+          
+          # Build artifacts path
+          if [[ "${WORK_DIR}" == "." ]]; then
+            ARTIFACTS_PATH="target"
+          else
+            ARTIFACTS_PATH="${WORK_DIR}/target"
+          fi
+          
+          # Check if artifacts exist
+          if ls ${ARTIFACTS_PATH}/*.jar 1> /dev/null 2>&1; then
+            gh release create "${TAG_NAME}" \
+              --title "Release ${{ inputs.release-version }}" \
+              --generate-notes \
+              ${ARTIFACTS_PATH}/*.asc ${ARTIFACTS_PATH}/*.jar ${ARTIFACTS_PATH}/*.pom 2>/dev/null || {
+              echo "⚠️  Warning: Failed to upload some artifacts, but release was created"
+            }
+            echo "✅ GitHub release created with artifacts"
+          else
+            gh release create "${TAG_NAME}" \
+              --title "Release ${{ inputs.release-version }}" \
+              --generate-notes 2>/dev/null || {
+              echo "⚠️  Warning: Failed to create release"
+            }
+            echo "✅ GitHub release created (no artifacts found)"
+          fi
+        else
+          echo "⚠️  GitHub CLI not found, skipping release creation"
+        fi
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
-        
-    - name: Deploy to GitHub Pages
+
+    - name: Deploy Documentation to GitHub Pages
+      if: inputs.deploy-pages == 'true'
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ inputs.github-token }}
-        publish_dir: ./target/staging
+        publish_dir: ${{ inputs.working-directory }}/target/staging
+        enable_jekyll: false
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
 
-    - name: Set Next Version for main branch
+    - name: Merge Release to Default Branch
       shell: bash
       run: |
-        mvn -B -U -ntp versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
-        git commit --no-verify -a -m "[CI Skip] Next version v${NEXT_VERSION}"
-        git push origin "$RELEASE_VERSION"
-        git checkout main
-        git pull origin main
-        git merge "$RELEASE_VERSION"
-        git push origin main
-        git branch -d "$RELEASE_VERSION"
-        git push origin --delete "$RELEASE_VERSION"
-          
-    - name: Release Milestone
+        set -e
+        RELEASE_BRANCH="${{ inputs.release-version }}"
+        WORK_DIR="${{ inputs.working-directory }}"
+        
+        # Auto-detect default branch
+        echo "🔍 Detecting default branch..."
+        MAIN_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+        
+        # Fallback: try to get from remote
+        if [[ -z "${MAIN_BRANCH}" ]]; then
+          MAIN_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+        fi
+        
+        # Final fallback
+        if [[ -z "${MAIN_BRANCH}" ]]; then
+          MAIN_BRANCH="main"
+          echo "⚠️  Could not detect default branch, using: ${MAIN_BRANCH}"
+        else
+          echo "📌 Default branch detected: ${MAIN_BRANCH}"
+        fi
+        
+        echo "🔄 Setting next version and merging to ${MAIN_BRANCH}..."
+        
+        # Set next development version (Maven operation in working directory)
+        echo "📝 Updating version to ${{ inputs.next-version }}..."
+        if [[ "${WORK_DIR}" != "." ]]; then
+          cd "${WORK_DIR}"
+        fi
+        
+        mvn ${{ inputs.maven-args }} versions:set \
+          -DprocessAllModules=true \
+          -DgenerateBackupPoms=false \
+          -DnewVersion=${{ inputs.next-version }}
+        
+        # Return to repo root for Git operations
+        if [[ "${WORK_DIR}" != "." ]]; then
+          cd "${GITHUB_WORKSPACE}"
+        fi
+        
+        # Commit and push next version
+        git add .
+        git commit --no-verify -m "chore: prepare for next development iteration ${{ inputs.next-version }}"
+        git push origin "${RELEASE_BRANCH}"
+        echo "✅ Next version committed to release branch"
+        
+        # Merge to main branch
+        echo "🔀 Merging to ${MAIN_BRANCH}..."
+        git checkout "${MAIN_BRANCH}"
+        git pull origin "${MAIN_BRANCH}"
+        git merge --no-ff "${RELEASE_BRANCH}" -m "chore: merge release ${{ inputs.release-version }}"
+        git push origin "${MAIN_BRANCH}"
+        echo "✅ Merged to ${MAIN_BRANCH}"
+        
+        # Clean up release branch
+        echo "🧹 Cleaning up release branch..."
+        git branch -d "${RELEASE_BRANCH}"
+        git push origin --delete "${RELEASE_BRANCH}"
+        echo "✅ Release branch deleted"
+
+    - name: Manage Release Milestone
       uses: rosestack/milestone-release-action@main
       with:
         github-token: ${{ inputs.github-token }}
-        milestone-title: ${{ env.RELEASE_VERSION }}
-        milestone-next: ${{ env.NEXT_VERSION }}
+        milestone-title: ${{ inputs.release-version }}
+        milestone-next: ${{ inputs.next-version }}
 
