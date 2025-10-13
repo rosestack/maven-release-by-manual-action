@@ -30,6 +30,7 @@ jobs:
       - name: Release Maven Project
         uses: rosestack/maven-release-by-manual-action@main
         with:
+          working-directory: 'test-project'
           # Version Configuration
           release-version: ${{ github.event.inputs.release-version }}
           next-version: ${{ github.event.inputs.next-version }}
