@@ -62,10 +62,10 @@ on:
   workflow_dispatch:
     inputs:
       release-version:
-        description: '发布版本 (如 1.0.0)'
+        description: '发布版本 (如 0.0.1)'
         required: true
       next-version:
-        description: '下一个开发版本 (如 1.0.1-SNAPSHOT)'
+        description: '下一个开发版本 (如 0.0.2-SNAPSHOT)'
         required: true
 
 jobs:
@@ -102,8 +102,8 @@ jobs:
   uses: rosestack/maven-release-by-manual-action@main
   with:
     # 版本配置
-    release-version: '1.0.0'
-    next-version: '1.0.1-SNAPSHOT'
+    release-version: '0.0.1'
+    next-version: '0.0.2-SNAPSHOT'
     
     # Java 配置
     java-version: '17'
@@ -137,8 +137,8 @@ jobs:
 
 | 参数 | 说明 | 示例 |
 |------|------|------|
-| `release-version` | 发布版本 | `1.0.0` |
-| `next-version` | 下一个开发版本 | `1.0.1-SNAPSHOT` |
+| `release-version` | 发布版本 | `0.0.1` |
+| `next-version` | 下一个开发版本 | `0.0.2-SNAPSHOT` |
 | `maven-username` | Maven Central 用户名 | 来自 secrets |
 | `maven-password` | Maven Central 密码 | 来自 secrets |
 | `gpg-private-key` | GPG 私钥 | 来自 secrets |
@@ -213,7 +213,7 @@ permissions:
   <!-- 项目坐标 -->
   <groupId>io.github.yourusername</groupId>
   <artifactId>your-project</artifactId>
-  <version>1.0.0</version>
+  <version>0.0.1</version>
   
   <!-- 必需元数据 -->
   <name>Your Project</name>

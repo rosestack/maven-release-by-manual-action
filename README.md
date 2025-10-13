@@ -60,10 +60,10 @@ on:
   workflow_dispatch:
     inputs:
       release-version:
-        description: 'Release version (e.g., 1.0.0)'
+        description: 'Release version (e.g., 0.0.1)'
         required: true
       next-version:
-        description: 'Next development version (e.g., 1.0.1-SNAPSHOT)'
+        description: 'Next development version (e.g., 0.0.2-SNAPSHOT)'
         required: true
 
 jobs:
@@ -106,8 +106,8 @@ jobs:
   uses: rosestack/maven-release-by-manual-action@main
   with:
     # Version Configuration
-    release-version: '1.0.0'
-    next-version: '1.0.1-SNAPSHOT'
+    release-version: '0.0.1'
+    next-version: '0.0.2-SNAPSHOT'
     
     # Java Configuration
     java-version: '17'
@@ -141,8 +141,8 @@ jobs:
 
 | Input | Description | Example |
 |-------|-------------|---------|
-| `release-version` | Release version | `1.0.0` |
-| `next-version` | Next development version | `1.0.1-SNAPSHOT` |
+| `release-version` | Release version | `0.0.1` |
+| `next-version` | Next development version | `0.0.2-SNAPSHOT` |
 | `maven-username` | Maven Central username | From secrets |
 | `maven-password` | Maven Central password | From secrets |
 | `gpg-private-key` | GPG private key | From secrets |
@@ -217,7 +217,7 @@ Your `pom.xml` must include required metadata and plugins. See the [test-project
   <!-- Project coordinates -->
   <groupId>io.github.yourusername</groupId>
   <artifactId>your-project</artifactId>
-  <version>1.0.0</version>
+  <version>0.0.1</version>
   
   <!-- Required metadata -->
   <name>Your Project</name>
