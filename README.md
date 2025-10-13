@@ -156,7 +156,7 @@ jobs:
 
 | Input | Description | Default |
 |-------|-------------|---------|
-| `java-version` | Java version to use | `8` |
+| `java-version` | Java version to use | `17` |
 | `java-distribution` | Java distribution | `temurin` |
 | `maven-args` | Additional Maven arguments | `-B -U -ntp` |
 | `maven-profiles` | Maven profiles to activate | `central` |
@@ -350,16 +350,6 @@ with:
 - Ensure main branch is up to date before release
 - Resolve any pending PRs that might conflict
 
-## 📊 Comparison with maven-release-by-manual-action
-
-This action builds upon the concepts from [maven-release-by-manual-action](https://github.com/rosestack/maven-release-by-manual-action) but adds:
-
-- ✅ Release branch management
-- ✅ Automatic version bumping
-- ✅ Next development version handling
-- ✅ Release branch merge and cleanup
-- ✅ Milestone management integration
-
 ## 📄 License
 
 Apache License 2.0 - see [LICENSE](LICENSE) file for details.
@@ -370,7 +360,6 @@ Contributions are welcome! Please feel free to submit issues and pull requests.
 
 ## 🙏 Acknowledgments
 
-- Inspired by [maven-release-by-manual-action](https://github.com/rosestack/maven-release-by-manual-action)
 - Uses [actions/checkout](https://github.com/actions/checkout)
 - Uses [actions/setup-java](https://github.com/actions/setup-java)
 - Uses [peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages)

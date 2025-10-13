@@ -18,7 +18,7 @@ inputs:
   java-version:
     description: 'Java version to use for building'
     required: false
-    default: '8'
+    default: '17'
   java-distribution:
     description: 'Java distribution (temurin, zulu, adopt, etc.)'
     required: false

@@ -1,4 +1,4 @@
-# Maven 手动发布 Action
+# Maven Release By Manual Action
 
 [![GitHub release](https://img.shields.io/github/v/release/rosestack/maven-release-by-manual-action)](https://github.com/rosestack/maven-release-by-manual-action/releases)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/rosestack/maven-release-by-manual-action/ci.yml?branch=main)](https://github.com/rosestack/maven-release-by-manual-action/actions/workflows/test.yml)
@@ -152,7 +152,7 @@ jobs:
 
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
-| `java-version` | 使用的 Java 版本 | `8` |
+| `java-version` | 使用的 Java 版本 | `17` |
 | `java-distribution` | Java 发行版 | `temurin` |
 | `maven-args` | 额外的 Maven 参数 | `-B -U -ntp` |
 | `maven-profiles` | 激活的 Maven profiles | `central` |
@@ -346,16 +346,6 @@ with:
 - 确保发布前主分支是最新的
 - 解决任何可能冲突的待处理 PR
 
-## 📊 与 maven-release-by-manual-action 的比较
-
-该 Action 基于 [maven-release-by-manual-action](https://github.com/rosestack/maven-release-by-manual-action) 的概念，但增加了：
-
-- ✅ 发布分支管理
-- ✅ 自动版本更新
-- ✅ 下一个开发版本处理
-- ✅ 发布分支合并和清理
-- ✅ 里程碑管理集成
-
 ## 📄 许可证
 
 Apache License 2.0 - 详见 [LICENSE](LICENSE) 文件。
@@ -366,7 +356,6 @@ Apache License 2.0 - 详见 [LICENSE](LICENSE) 文件。
 
 ## 🙏 致谢
 
-- 灵感来自 [maven-release-by-manual-action](https://github.com/rosestack/maven-release-by-manual-action)
 - 使用 [actions/checkout](https://github.com/actions/checkout)
 - 使用 [actions/setup-java](https://github.com/actions/setup-java)
 - 使用 [peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages)
