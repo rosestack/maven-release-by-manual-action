@@ -1,9 +1,9 @@
 # Maven Release by Manual Action
 
-[![GitHub release](https://img.shields.io/github/v/release/chensoul/maven-release-by-manual-action)](https://github.com/chensoul/maven-release-by-manual-action/releases)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/chensoul/maven-release-by-manual-action/ci.yml?branch=main)](https://github.com/chensoul/maven-release-by-manual-action/actions/workflows/test.yml)
-[![License](https://img.shields.io/github/license/chensoul/maven-release-by-manual-action)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/chensoul/maven-release-by-manual-action)](https://github.com/chensoul/maven-release-by-manual-action/stargazers)
+[![GitHub release](https://img.shields.io/github/v/release/rosestack/maven-release-by-manual-action)](https://github.com/rosestack/maven-release-by-manual-action/releases)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/rosestack/maven-release-by-manual-action/ci.yml?branch=main)](https://github.com/rosestack/maven-release-by-manual-action/actions/workflows/test.yml)
+[![License](https://img.shields.io/github/license/rosestack/maven-release-by-manual-action)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/rosestack/maven-release-by-manual-action)](https://github.com/rosestack/maven-release-by-manual-action/stargazers)
 
 A comprehensive GitHub Actions workflow for automating Maven project releases with complete version management, Maven Central deployment, and documentation publishing.
 
