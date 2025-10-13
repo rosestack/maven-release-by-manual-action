@@ -250,15 +250,12 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
 
-    - name: Deploy Documentation to GitHub Pages
+    - name: Deploy to GitHub Pages
       if: inputs.deploy-pages == 'true'
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ inputs.github-token }}
         publish_dir: ${{ inputs.working-directory }}/target/staging
-        enable_jekyll: false
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
 
     - name: Merge Release to Default Branch
       shell: bash
