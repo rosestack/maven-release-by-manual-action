@@ -159,7 +159,7 @@ jobs:
 | `java-version` | Java version to use | `17` |
 | `java-distribution` | Java distribution | `temurin` |
 | `maven-args` | Additional Maven arguments | `-B -U -ntp` |
-| `maven-profiles` | Maven profiles to activate | `central` |
+| `maven-profiles` | Maven profiles to activate | `release` |
 | `maven-server-id` | Maven server ID for authentication | `central` |
 | `skip-tests` | Skip running tests | `false` |
 | `deploy-pages` | Deploy to GitHub Pages | `true` |
@@ -216,59 +216,60 @@ Your `pom.xml` must include required metadata and plugins. See the [test-project
 ### Essential Configuration
 
 ```xml
+
 <project>
-  <!-- Project coordinates -->
-  <groupId>io.github.yourusername</groupId>
-  <artifactId>your-project</artifactId>
-  <version>0.0.1</version>
-  
-  <!-- Required metadata -->
-  <name>Your Project</name>
-  <description>Project description</description>
-  <url>https://github.com/yourusername/your-project</url>
-  
-  <!-- License -->
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
-    </license>
-  </licenses>
-  
-  <!-- Developers -->
-  <developers>
-    <developer>
-      <name>Your Name</name>
-      <email>your.email@example.com</email>
-    </developer>
-  </developers>
-  
-  <!-- SCM -->
-  <scm>
-    <connection>scm:git:git://github.com/yourusername/your-project.git</connection>
-    <developerConnection>scm:git:ssh://github.com:yourusername/your-project.git</developerConnection>
+    <!-- Project coordinates -->
+    <groupId>io.github.yourusername</groupId>
+    <artifactId>your-project</artifactId>
+    <version>0.0.1</version>
+
+    <!-- Required metadata -->
+    <name>Your Project</name>
+    <description>Project description</description>
     <url>https://github.com/yourusername/your-project</url>
-  </scm>
-  
-  <!-- Distribution Management -->
-  <distributionManagement>
-    <repository>
-      <id>central</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
-  
-  <!-- Profiles -->
-  <profiles>
-    <profile>
-      <id>central</id>
-      <build>
-        <plugins>
-          <!-- GPG, Source, and Javadoc plugins -->
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+
+    <!-- License -->
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <!-- Developers -->
+    <developers>
+        <developer>
+            <name>Your Name</name>
+            <email>your.email@example.com</email>
+        </developer>
+    </developers>
+
+    <!-- SCM -->
+    <scm>
+        <connection>scm:git:git://github.com/yourusername/your-project.git</connection>
+        <developerConnection>scm:git:ssh://github.com:yourusername/your-project.git</developerConnection>
+        <url>https://github.com/yourusername/your-project</url>
+    </scm>
+
+    <distributionManagement>
+        <!-- After using org.sonatype.central:central-publishing-maven-plugin, it can be ignored. This is only a prompt -->
+        <snapshotRepository>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <!-- Profiles -->
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <!-- GPG, Source, and Javadoc plugins -->
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
 ```
 
@@ -327,7 +328,7 @@ with:
 
 ```yaml
 with:
-  maven-profiles: ',sign'
+  maven-profiles: 'release'
 ```
 
 ## 🔧 Troubleshooting

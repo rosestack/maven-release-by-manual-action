@@ -142,7 +142,7 @@
 
     <profiles>
         <profile>
-            <id>central</id>
+            <id>release</id>
             <build>
                 <plugins>
                     <!-- GPG Signing -->

@@ -65,7 +65,7 @@ jobs:
           # maven-server-id: 'central'
           
           # Optional: Activate additional Maven profiles
-          # maven-profiles: 'central,release'
+          # maven-profiles: 'release'
           
           # Optional: Specify working directory for submodules
           # working-directory: 'my-module'

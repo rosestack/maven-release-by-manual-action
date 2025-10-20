@@ -155,7 +155,7 @@ jobs:
 | `java-version` | 使用的 Java 版本 | `17` |
 | `java-distribution` | Java 发行版 | `temurin` |
 | `maven-args` | 额外的 Maven 参数 | `-B -U -ntp` |
-| `maven-profiles` | 激活的 Maven profiles | `central` |
+| `maven-profiles` | 激活的 Maven profiles | `release` |
 | `maven-server-id` | Maven 服务器 ID | `central` |
 | `skip-tests` | 跳过测试 | `false` |
 | `deploy-pages` | 部署到 GitHub Pages | `true` |
@@ -212,59 +212,61 @@ permissions:
 ### 基本配置
 
 ```xml
+
 <project>
-  <!-- 项目坐标 -->
-  <groupId>io.github.yourusername</groupId>
-  <artifactId>your-project</artifactId>
-  <version>0.0.1</version>
-  
-  <!-- 必需元数据 -->
-  <name>Your Project</name>
-  <description>项目描述</description>
-  <url>https://github.com/yourusername/your-project</url>
-  
-  <!-- 许可证 -->
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
-    </license>
-  </licenses>
-  
-  <!-- 开发者 -->
-  <developers>
-    <developer>
-      <name>Your Name</name>
-      <email>your.email@example.com</email>
-    </developer>
-  </developers>
-  
-  <!-- SCM -->
-  <scm>
-    <connection>scm:git:git://github.com/yourusername/your-project.git</connection>
-    <developerConnection>scm:git:ssh://github.com:yourusername/your-project.git</developerConnection>
+    <!-- 项目坐标 -->
+    <groupId>io.github.yourusername</groupId>
+    <artifactId>your-project</artifactId>
+    <version>0.0.1</version>
+
+    <!-- 必需元数据 -->
+    <name>Your Project</name>
+    <description>项目描述</description>
     <url>https://github.com/yourusername/your-project</url>
-  </scm>
-  
-  <!-- 分发管理 -->
-  <distributionManagement>
-    <repository>
-      <id>central</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
-  
-  <!-- Profiles -->
-  <profiles>
-    <profile>
-      <id>central</id>
-      <build>
-        <plugins>
-          <!-- GPG、Source 和 Javadoc 插件 -->
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+
+    <!-- 许可证 -->
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <!-- 开发者 -->
+    <developers>
+        <developer>
+            <name>Your Name</name>
+            <email>your.email@example.com</email>
+        </developer>
+    </developers>
+
+    <!-- SCM -->
+    <scm>
+        <connection>scm:git:git://github.com/yourusername/your-project.git</connection>
+        <developerConnection>scm:git:ssh://github.com:yourusername/your-project.git</developerConnection>
+        <url>https://github.com/yourusername/your-project</url>
+    </scm>
+
+    <!-- 分发管理 -->
+    <distributionManagement>
+        <!-- After using org.sonatype.central:central-publishing-maven-plugin, it can be ignored. This is only a prompt -->
+        <snapshotRepository>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <!-- Profiles -->
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <!-- GPG、Source 和 Javadoc 插件 -->
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
 ```
 
@@ -323,7 +325,7 @@ with:
 
 ```yaml
 with:
-  maven-profiles: ',sign'
+  maven-profiles: 'release'
 ```
 
 ## 🔧 故障排除
